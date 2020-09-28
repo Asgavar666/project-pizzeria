@@ -77,32 +77,32 @@
       const thisProduct = this;
   
       /* find the clickable trigger (the element that should react to clicking) */
-      const clickableElement = document.querySelector(select.menuProduct.clickable);
+      const clickableElement = thisProduct.element.querySelector(select.menuProduct.clickable);
       console.log('clickableElement: ',  clickableElement);
       /* START: click event listener to trigger */
-      clickableElement.addEventListener('click' , function(){
+      clickableElement.addEventListener('click' , function(event){
         /* prevent default action for event */
         event.preventDefault();
         /* toggle active class on element of thisProduct */
-        thisProduct.element.classList.toggle(clickableElement);
+        thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
         /* find all active products */
-        const activeProducts = document.querySelectorAll(classNames.menuProduct);
+        const allActiveProducts = document.querySelectorAll(select.all.menuProductsActive);
         /* START LOOP: for each active product */
-        activeProducts.forEach(product);{
+        for(let product of allActiveProducts){
           
           /* START: if the active product isn't the element of thisProduct */
-          if(thisProduct != activeProduct){
+          if(product != thisProduct.element){
             /* remove class active for the active product */
-            activeProduct.classList.remove('.active');
+            product.classList.remove(classNames.menuProduct.wrapperActive);
             
           /* END: if the active product isn't the element of thisProduct */
-          }console.log('activeProduct', activeProduct);
+          }
         /* END LOOP: for each active product */
         }
       /* END: click event listener to trigger */
-    });
+      });
+    }
   }
-}
   
 
   const app = {
