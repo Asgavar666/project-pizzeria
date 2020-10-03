@@ -196,6 +196,8 @@
         }
       /* END LOOP: for each paramId in thisProduct.data.params */
       }
+      /* multiply price by amount*/
+      price *= thisProduct.amountWidget.value;
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerText = price;
      
@@ -204,6 +206,9 @@
       const thisProduct = this;
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+      thisProduct.amountWidgetElem.addEventListener('updated', function(event){
+        thisProduct.processOrder();
+      } );
     }
   }
   class AmountWidget{
@@ -212,8 +217,11 @@
       
       thisWidget.getElements(element);
       thisWidget.value = settings.amountWidget.defaultValue;
-      thisWidget.setValue(thisWidget.input.value);
+      
+        thisWidget.setValue(thisWidget.input.value);
       thisWidget.initActions();
+      
+      
       console.log('AmountWidget: ', thisWidget);
       console.log('constructor arguments: ', element);
     }
@@ -230,8 +238,11 @@
       const newValue = parseInt(value);
 
       /*TODO: Add validation*/
-
-      thisWidget.value = newValue;
+      if(newValue != thisWidget.value && newValue >= settings.amountWidget.defaultMin && newValue <= settings.amountWidget.defaultMax){
+         thisWidget.value = newValue;
+        thisWidget.announce();
+      }
+     
       thisWidget.input.value = thisWidget.value;
     }
     initActions(){
@@ -252,7 +263,12 @@
       } );
       
     }
+    announce(){
+      const thisWidget = this;
 
+      const event = new Event('updated');
+      thisWidget.element.dispatchEvent(event);
+    }
   }
   const app = {
     initMenu: function(){
