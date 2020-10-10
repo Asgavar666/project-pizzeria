@@ -242,7 +242,7 @@
       /* END LOOP: for each paramId in thisProduct.data.params */
       }
       /* multiply price by amount*/
-      thisProduct.PriceSingle = price;
+      thisProduct.priceSingle = price;
       thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerText = thisProduct.price;
@@ -364,8 +364,8 @@
       console.log('DOM is: ', generatedDOM);
       //add DOM elements to thisCart.dom.productList
       thisCart.dom.productList.appendChild(generatedDOM);
-      //thisCart.products.push(new cartProduct(menuProduct, generatedDOM));
-      //const generatedHTML = templates.cartProduct(thisProduct);
+      
+      
       console.log('Adding product', menuProduct);
     }
   }
