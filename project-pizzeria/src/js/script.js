@@ -215,7 +215,7 @@
           }
           /*add const images*/
           const optionImages = thisProduct.imageWrapper.querySelectorAll('.' + paramId + '-' + optionId);
-          console.log('optionImages', optionImages);
+          //console.log('optionImages', optionImages);
           /*START IF ELSE: if option is selected, all img for this opt get className*/
           if(optionSelected){
             if(!thisProduct.params[paramId]){
@@ -246,7 +246,7 @@
       thisProduct.price = thisProduct.priceSingle * thisProduct.amountWidget.value;
       /* set the contents of thisProduct.priceElem to be the value of variable price */
       thisProduct.priceElem.innerText = thisProduct.price;
-      console.log('thisProduct.params: ', thisProduct.params);
+      //console.log('thisProduct.params: ', thisProduct.params);
     }
     initAmountWidget(){
       const thisProduct = this;
@@ -364,9 +364,56 @@
       console.log('DOM is: ', generatedDOM);
       //add DOM elements to thisCart.dom.productList
       thisCart.dom.productList.appendChild(generatedDOM);
-      
+      thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
+      thisCart.update();
+      console.log('thisCart.products', thisCart.products);
       
       console.log('Adding product', menuProduct);
+    }
+    update(){
+      const thisCart = this;
+      thisCart.totalNumber = 0;
+      thisCart.subtotalPrice = 0;
+
+      for(let product of thisCart.products){
+        thisCart.subtotalPrice += product.price;
+        thisCart.totalNumber += product.amount;
+      }
+
+      /*condition statment for nulling totalPrice*/
+      thisCart.totalPrice = (thisCart.totalNumber == 0) ? 0 : thisCart.subtotalPrice + thisCart.deliveryFee;
+
+      for(let key of thisCart.renderTotalsKeys){
+        for(let elem of thisCart.dom[key]){
+          elem.innerHTML = thisCart[key];
+        }
+      }
+  }
+}
+  class CartProduct{
+    constructor(menuProduct, element){
+      const thisCartProduct = this;
+
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.params = JSON.parse(JSON.stringify(menuProduct.params));
+      thisCartProduct.getElements(element);
+      
+      console.log('newCartProduct', thisCartProduct);
+    }
+
+    getElements(element){
+      const thisCartProduct = this;
+
+      thisCartProduct.dom = {};
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = thisCartProduct.dom.wrapper.querySelector(select.cartProduct.remove);
     }
   }
   const app = {
