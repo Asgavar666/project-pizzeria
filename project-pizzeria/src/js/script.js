@@ -438,8 +438,8 @@
       const payload = {
         address: 'test',
         totalPrice: thisCart.totalPrice,
-        phone: thisCart.phone,
-        homeAddress: thisCart.address,
+        phone: thisCart.dom.phone,
+        homeAddress: thisCart.dom.address,
         totalNumber: thisCart.totalNumber,
         subtotalPrice: thisCart.subtotalPrice,
         deliveryFee: thisCart.deliveryFee,
@@ -477,10 +477,11 @@
       thisCartProduct.amount = menuProduct.amount;
       thisCartProduct.params = JSON.parse(JSON.stringify(menuProduct.params));
 
-      thisCartProduct.getData();
+     
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
       thisCartProduct.initActions();
+      thisCartProduct.getData();
       // console.log('thisCartProduct', thisCartProduct);
     }
 
