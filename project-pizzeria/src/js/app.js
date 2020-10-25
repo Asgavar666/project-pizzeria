@@ -5,6 +5,47 @@ import Cart from './components/Cart.js';
 
 
 const app = {
+  initPages: function(){
+    const thisApp = this;
+
+    thisApp.pages = document.querySelector(select.containerOf.pages).children;
+    thisApp.navLinks = document.querySelectorAll(select.nav.links);
+    
+    thisApp.activatePage(thisApp.pages[0].Id);
+
+    for(let link of thisApp.navLinks){
+      link.addEventListener('click', function(event){
+        const clickedElement = this;
+        event.preventDefault();
+
+        /* get page id from href attr*/
+        const id = clickedElement.getAttribute('href').replace('#', '');
+        /* run thisApp.activatePage with that id */
+        thisApp.activatePage(id);
+
+
+
+      });
+    }
+
+  },
+  activatePage: function(pageId){
+    const thisApp = this;
+    // add class .active to matching pages and remove from non - matching
+    for(let page of thisApp.pages){
+      
+      page.classList.toggle(classNames.pages.active, page.Id == pageId);
+    }
+    // add class .active to matching links and remove from non - matching
+    for(let link of thisApp.navLinks){
+      
+      link.classList.toggle(
+        classNames.nav.active, 
+        link.getAttribute('href') ==  '#' +  pageId
+      );
+    }
+
+  },
   initMenu: function(){
     const thisApp = this;
       
@@ -53,9 +94,10 @@ const app = {
     console.log('templates:', templates);
 
     thisApp.initData();
-     
+    thisApp.initPages();
     thisApp.initCart();
   },
+ 
 };
 
 app.init();
