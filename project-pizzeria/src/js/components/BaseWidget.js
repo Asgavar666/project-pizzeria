@@ -5,6 +5,7 @@ class BaseWidget{
 
     thisWidget.dom = {};
     thisWidget.dom.wrapper = wrapperElement;
+    console.log('thisWidget.dom.wrapper', thisWidget.dom.wrapper);
     thisWidget.correctValue = initialValue;
   }
   get value(){
