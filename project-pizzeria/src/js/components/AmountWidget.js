@@ -38,8 +38,13 @@ class AmountWidget extends BaseWidget {
     thisWidget.dom.input.value = thisWidget.value;
   }
 
+  parseValue(value){
+    return parseFloat(value);
+  }
   initActions(){
     const thisWidget = this;
+
+    thisWidget.value = null;
 
     thisWidget.dom.input.addEventListener('change', function(event){
       event.preventDefault();
@@ -48,12 +53,28 @@ class AmountWidget extends BaseWidget {
 
     thisWidget.dom.linkDecrease.addEventListener('click', function(event){
       event.preventDefault();
-      thisWidget.setValue(thisWidget.value - 1);
+      //thisWidget.setValue(thisWidget.value - 1);
+
+      if(thisWidget.dom.input == document.querySelector('.hours-amount input')){
+        thisWidget.value = thisWidget.value - 0.5;
+      } else{
+        thisWidget.value = thisWidget.value -1;
+      }
+      
     });
 
     thisWidget.dom.linkIncrease.addEventListener('click', function(event){
       event.preventDefault();
-      thisWidget.setValue(thisWidget.value + 1);
+      //thisWidget.setValue(thisWidget.value + 1);
+      if(thisWidget.dom.input == document.querySelector('.hours-amount input')){
+        //thisWidget.setValue(thisWidget.value + 0.5);
+        thisWidget.value = thisWidget.value + 0.5;
+        
+      } else {
+        //thisWidget.setValue(thisWidget.value +1);
+        thisWidget.value = thisWidget.value +1;
+        
+      }
     });
   }
 

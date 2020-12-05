@@ -155,21 +155,28 @@ class Booking {
     for (let table of thisBooking.dom.tables){
       table.addEventListener('click', function(event){
         if (!table.classList.contains(classNames.booking.tableBooked)){
+          
           thisBooking.reserveTable(event);
+          thisBooking.checkForOvercome(table);
         }
       });
     }
 
     thisBooking.dom.datePicker.addEventListener('change', function(){
       for (let table of thisBooking.dom.tables){
+       
         table.classList.remove(classNames.booking.tableReserving);
+        
       }
     });
 
     thisBooking.hourInput = thisBooking.generatedDOM.querySelector(select.widgets.hourPicker.input);
+    
     thisBooking.hourInput.addEventListener('change', function(){
       for (let table of thisBooking.dom.tables){
+        
         table.classList.remove(classNames.booking.tableReserving);
+        
       }
     });
   }
@@ -182,13 +189,39 @@ class Booking {
     }
 
   }
+  checkForOvercome(table){
+    const thisBooking = this;
 
+    //New code for max duration
+    const maxDuration = 24 - utils.hourToNumber(thisBooking.hourPicker.value);
+    const bookingButton = document.querySelector('#booking-button');
+    const thisHour = utils.hourToNumber(thisBooking.hourPicker.value);
+
+    if (thisBooking.hoursAmount.value > maxDuration){
+      console.log('godzina!!!', thisBooking.hoursAmount.value);
+      bookingButton.disabled = true;
+      alert('booking time too long');
+    }
+
+    const tableNumber = table.getAttribute(settings.booking.tableIdAttribute);
+    const tableId = parseInt(tableNumber);
+
+    for (let timePeriod = thisHour; timePeriod < thisHour + thisBooking.hoursAmount.value; timePeriod += 0.5){
+
+      if(thisBooking.booked[thisBooking.date][timePeriod].includes(tableId)){
+        bookingButton.disabled = true;
+        
+        
+      }
+    }
+
+  }
   sendReservation(){
     const thisBooking = this;
 
     const url = settings.db.url + '/' + settings.db.booking;
 
-    let pickedTable = '';
+    let pickedTable = {};
 
     for (let table of thisBooking.dom.tables){
       if(table.classList.contains(classNames.booking.tableReserving)){
@@ -197,6 +230,7 @@ class Booking {
         table.classList.remove(classNames.booking.tableReserving);
       }
     }
+    
 
     const payload = {
       date: thisBooking.datePicker.value,
@@ -205,8 +239,8 @@ class Booking {
       repeat: false,
       duration: thisBooking.hoursAmount.value,
       ppl: thisBooking.peopleAmount.value,
-      //phone: thisBooking.dom.phone.value,
-      //adress: thisBooking.dom.address.value,
+      phone: thisBooking.dom.phone.value,
+      adress: thisBooking.dom.address.value,
     };
     //console.log(payload);
     const options = {
@@ -216,6 +250,10 @@ class Booking {
       },
       body: JSON.stringify(payload),
     };
+    thisBooking.dom.phone.value = '';
+    thisBooking.dom.address.value = '';
+    thisBooking.hoursAmount.value = '1';
+    thisBooking.peopleAmount.value = '1';
 
     fetch(url, options)
       .then(response => response.json())
@@ -224,11 +262,7 @@ class Booking {
         thisBooking.updateDOM();
       });
     //console.log('thisBooking.booked', thisBooking.booked);
-    //thisBooking.dom.phone.value = '';
-    //thisBooking.dom.address.value = '';
-    thisBooking.hoursAmount.value = '1';
-    thisBooking.peopleAmount.value = '1';
-
+    
   }
 
   render(element){
@@ -246,8 +280,8 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.generatedDOM.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.tables = thisBooking.generatedDOM.querySelectorAll(select.booking.tables);
     thisBooking.dom.order = thisBooking.generatedDOM.querySelector(select.booking.orderConfirmationButton);
-    thisBooking.dom.phone = thisBooking.generatedDOM.querySelector(select.booking.phone);
-    thisBooking.dom.address = thisBooking.generatedDOM.querySelector(select.booking.address);
+    thisBooking.dom.phone = thisBooking.generatedDOM.querySelector(select.cart.phone);
+    thisBooking.dom.address = thisBooking.generatedDOM.querySelector(select.cart.address);
   }
 
   initWidgets(){

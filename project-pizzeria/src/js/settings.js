@@ -68,7 +68,7 @@ export const select = {
     bookTable: '.order-confirmation button',
     starters: '[name="starter"]',
     tableChosen: '.table.chosen',
-    orderConfirmationButton: '#order-btn',
+    orderConfirmationButton: '#booking-button',
   },
   nav: {
     links: '.main-nav a',
@@ -116,7 +116,7 @@ export const settings = {
     tableIdAttribute: 'data-table',
   },
   db: {
-    url: '//localhost:3131',
+    url: '//' + window.location.hostname + (window.location.hostname=='localhost' ? ':3131' : ''),
     product: 'product',
     order: 'order',
     booking: 'booking',
