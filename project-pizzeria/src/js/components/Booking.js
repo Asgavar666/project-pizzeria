@@ -157,7 +157,7 @@ class Booking {
         if (!table.classList.contains(classNames.booking.tableBooked)){
           
           thisBooking.reserveTable(event);
-          thisBooking.checkForOvercome(table);
+          
         }
       });
     }
@@ -189,7 +189,7 @@ class Booking {
     }
 
   }
-  checkForOvercome(table){
+  checkForOvercome(){
     const thisBooking = this;
 
     //New code for max duration
@@ -198,11 +198,12 @@ class Booking {
     const thisHour = utils.hourToNumber(thisBooking.hourPicker.value);
 
     if (thisBooking.hoursAmount.value > maxDuration){
-      console.log('godzina!!!', thisBooking.hoursAmount.value);
+      console.log('thisBooking.hoursAmount.value', thisBooking.hoursAmount.value);
       bookingButton.disabled = true;
       alert('booking time too long');
     }
-
+    const table = document.querySelector(classNames.booking.tableReserving);
+    
     const tableNumber = table.getAttribute(settings.booking.tableIdAttribute);
     const tableId = parseInt(tableNumber);
 
@@ -297,7 +298,13 @@ class Booking {
     });
     thisBooking.dom.order.addEventListener('click', function(event){
       event.preventDefault();
-      thisBooking.sendReservation();
+      
+      const isBookedPossible = thisBooking.checkForOvercome();
+      if(isBookedPossible){
+        thisBooking.sendReservation();
+      }else{
+        alert('booking not possible');
+      }
     });
   }
 }
